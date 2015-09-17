@@ -35,3 +35,8 @@ urlpatterns = patterns('',
 ```
 
 You should also already have internationalization enabled in your Django project, and the appropriate settings configured for that. For more: https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
+
+## Troubleshooting
+### Common errors
+#### Improper permissions
+Make sure the user on which your Django project is running has the correct permissions to edit the locale `.mo` and `.po` files. The user will need to have permission to write to those files.
