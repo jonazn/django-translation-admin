@@ -1,0 +1,24 @@
+<tr class="entry {{ entry_type }}" id="{{ entry.msgid }}" ctxt="{% if entry.msgctxt %}{{ entry.msgctxt }}{% endif %}">
+    <td style="width: 47.5%;">
+        {{ entry.msgid }}
+        {% if entry.msgctxt %}
+            <div style="font-size: 10px;"><strong>Context:</strong> <em>{{ entry.msgctxt }}</em></div>
+        {% endif %}
+        {% if entry.comment %}
+            <div style="font-size: 10px;"><strong>Comment:</strong> <em>{{ entry.comment }}</em></div>
+        {% endif %}
+        <ul style="font-size: 10px;">
+            {% for occurrence in entry.occurrences %}
+                <li>
+                    {{ occurrence.0 }}:{{ occurrence.1 }}
+                </li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td style="width: 47.5%;">
+        <textarea rows="3" id="msgstr" style="width: 90%;">{{ entry.msgstr }}</textarea>
+    </td>
+    <td style="width: 5%;">
+        <input type="checkbox" id="fuzzy" {% if 'fuzzy' in entry.flags %} checked{% endif %}></input>
+    </td>
+</tr>

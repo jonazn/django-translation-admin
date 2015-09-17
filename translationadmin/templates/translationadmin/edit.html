@@ -1,0 +1,157 @@
+{% extends 'translationadmin/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <script>
+        function translationTabs() {
+            $(".tab").click(function() {
+                $(".tab").removeClass("selected");
+                $(this).addClass("selected");
+            });
+            
+            $(".tab[tab=all]").click(function() {
+                $(".entry").show();
+            });
+            $(".tab[tab=untranslated]").click(function() {
+                $(".entry").hide();
+                $(".untranslated").show();
+            });
+            $(".tab[tab=fuzzy]").click(function() {
+                $(".entry").hide();
+                $(".fuzzy").show();
+            });
+            $(".tab[tab=translated]").click(function() {
+                $(".entry").hide();
+                $(".translated").show();
+            });
+        }
+        
+        function serializePO() {
+            var data = [];
+            $(".entry").each(function() {
+                var entry = {
+                    "msgid": $(this).attr("id"), // for identification
+                    "msgctxt": $(this).attr("ctxt"), // for identification
+                    "fuzzy": $(this).find("#fuzzy").prop("checked"),
+                    "python-format": $(this).find("#python-format").prop("checked"),
+                    "msgstr": $(this).find("#msgstr").val(),
+                }
+                data.push(entry);
+            });
+            return data;
+        }
+        
+        var curSubmitting = false;
+        function submit() {
+            $("button#submit").click(function() {
+                if(!curSubmitting) {
+                    curSubmitting = true;
+                    $(this).attr("disabled", true);
+                    $(this).text("Loading...");
+                    var translationData = serializePO();
+                    var data = {
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "translation_data": JSON.stringify(translationData),
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'translationadmin:edit_post' app_name language_code %}",
+                        data: data,
+                        success: function(response) {
+                            if(response.success) {
+                                location.reload(true);
+                            } else {
+                                $("#response-box").text(response.errors).show();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+        
+        $(document).ready(function() {
+            translationTabs();
+            submit();
+        })
+    </script>
+    <style>
+        .content-box {
+            padding: 5px;
+        }
+        
+        .tab {
+            float: left;
+            width: 25%;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .tab:hover {
+            background: #f2f2f2;
+        }
+        
+        .tab.selected {
+            background: #666666;
+            color: white;
+        }
+    </style>
+    <div id="content" class="colM">
+        <h1>{{ app_name }} &mdash; {{ language_code }}</h1>
+        <button type="button" id="submit" class="blue clickable">Save</button>
+        <div id="content-main">
+            <div class="tab-container" style="overflow: hidden;">
+                <div class="tab width-25 selected" tabid="edit" tab="all">
+                    <div class="content-box">All</div>
+                </div>
+                <div class="tab width-25" tabid="edit" tab="untranslated">
+                    <div class="content-box">Untranslated</div>
+                </div>
+                <div class="tab width-25" tabid="edit" tab="fuzzy">
+                    <div class="content-box">Fuzzy</div>
+                </div>
+                <div class="tab width-25" tabid="edit" tab="translated">
+                    <div class="content-box">Translated</div>
+                </div>
+            </div>
+            <div>
+                <fieldset class="module aligned">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 47.5%; padding: 0;">
+                                <h2>Message</h2>
+                            </td>
+                            <td style="width: 47.5%; padding: 0;">
+                                <h2>Translation</h2>
+                            </td>
+                            <td style="width: 5%; padding: 0;">
+                                <h2>Fuzzy</h2>
+                            </td>
+                        </tr>
+                        {% for entry in pof.untranslated_entries %}
+                            {% with entry_type="untranslated" %}
+                                {% include 'translationadmin/entry.html' %}
+                            {% endwith %}
+                        {% endfor %}
+                        {% for entry in pof.fuzzy_entries %}
+                            {% with entry_type="fuzzy" %}
+                                {% include 'translationadmin/entry.html' %}
+                            {% endwith %}
+                        {% endfor %}
+                        {% for entry in pof.translated_entries %}
+                            {% with entry_type="translated" %}
+                                {% include 'translationadmin/entry.html' %}
+                            {% endwith %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-box">
+        <a href="#">
+            Return to top
+        </a>
+    </div>
+{% endblock content %}

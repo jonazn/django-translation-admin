@@ -1,0 +1,30 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Translate Admin</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="branding">
+                <h1 id="site-name"><a href="{% url 'translationadmin:index' %}">{% trans "Translation admin" %}</a></h1>
+            </div>
+            <div id="user-tools">
+                {% blocktrans with translator=user.username trimmed %}
+                    Welcome, <strong>{{ translator }}</strong>.
+                {% endblocktrans %}
+            </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+</html>

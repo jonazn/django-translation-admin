@@ -1,0 +1,37 @@
+{% extends 'translationadmin/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="dashboard">
+        <div id="content" class="colMS">
+            <h1>{% trans "Select an app" %}</h1>
+            <div id="content-main">
+                {% for app in app_list %}
+                    <div class="app-{{ app.name }} module">
+                        <table>
+                            <caption>
+                                <a class="section">{{ app.name }}</a>
+                            </caption>
+                            <tbody>
+                                {% for lang in app.languages %}
+                                    <tr class="model-{{ lang }}">
+                                        <th scope="row">
+                                            <a href="{% url 'translationadmin:edit' app.name lang %}">
+                                                {{ lang }}
+                                            </a>
+                                        </th>
+                                        <td>
+                                            <a href="{% url 'translationadmin:edit' app.name lang %}" class="changelink">
+                                                {% trans "Translate" %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
