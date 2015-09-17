@@ -2,6 +2,10 @@
 A lightweight translation admin app for Django.
 
 ## Installation
+This app requires `polib` to be installed. You can do so via pip, with `pip install polib`. More information: http://polib.readthedocs.org/en/latest/
+
+To start using `translationadmin`, simply add the app folder to your project, and then configure a couple of settings as stated below.
+
 In `settings.py`, add `translationadmin` to `INSTALLED_APPS`.
 
 ```
