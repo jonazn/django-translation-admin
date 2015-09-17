@@ -2,7 +2,7 @@
 A lightweight translation admin app for Django.
 
 ## Installation
-In settings.py, add `translationadmin` to INSTALLED_APPS.
+In `settings.py`, add `translationadmin` to INSTALLED_APPS.
 
 ```
 INSTALLED_APPS = (
@@ -15,7 +15,7 @@ INSTALLED_APPS = (
 )
 ```
 
-Also in settings.py, add a new list that tells `translationadmin` which apps to include.
+Also in `settings.py`, add a new list that tells `translationadmin` which apps to include.
 
 ```
 TRANSLATE_APP_LIST = (
@@ -24,7 +24,7 @@ TRANSLATE_APP_LIST = (
 )
 ```
 
-In your project's urls.py, add a new namespace for the app. Make sure the namespace is called `translationadmin`.
+In your project's `urls.py`, add a new namespace for the app. Make sure the namespace is called `translationadmin`.
 
 ```
 urlpatterns = patterns('',
